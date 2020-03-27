@@ -1,4 +1,5 @@
 const rp = require('request-promise');
+const etag = require('etag');
 // const {Storage} = require('@google-cloud/storage');
 // const storage = new Storage();
 
@@ -82,6 +83,7 @@ module.exports = (req, res) => {
     */
     res.header('Content-Type', response.headers['content-type']);
     res.header('Cache-Control', cacheControlString);
+    res.header('ETag', etag(response.data));
     return res.status(200).end(response.data);
     /*
     });
