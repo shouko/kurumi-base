@@ -1,0 +1,19 @@
+{
+  "name": "kurumi-base",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": "git@github.com:shouko/kurumi-base.git",
+  "author": "shouko <imshouko@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "express": "^4.17.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1"
+  }
+}
