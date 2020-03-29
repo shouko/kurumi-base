@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bunyan = require('bunyan');
 const http = require('http');
