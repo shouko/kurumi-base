@@ -8,7 +8,7 @@ const logger = bunyan.createLogger({ name: 'kurumi-base' });
 
 let dbConnected = false;
 const dbConnect = () => {
-  mongoose.connect(process.env.MONGODB_URL, {
+  mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
