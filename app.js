@@ -32,6 +32,7 @@ mongoose.connection.on('reconnected', () => {
 });
 
 const app = express();
+app.disable('x-powered-by');
 app.locals.logger = logger;
 app.locals.httpAgent = new http.Agent();
 app.locals.httpAgent.maxSockets = 10;
