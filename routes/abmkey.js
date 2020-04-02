@@ -2,14 +2,15 @@ const router = require('express').Router();
 const Abmkey = require('../models/Abmkey');
 
 router.get('/', (req, res) => {
-  Abmkey.find((err, docs) => {
+  Abmkey.find().limit(20).exec((err, docs) => {
     if (err) return res.sendStatus(500);
     return res.json(docs);
   });
 });
 
-router.post('/', (req, res) => {
-  const { id, payload } = req.body;
+router.put('/:id', (req, res) => {
+  const { payload } = req.body;
+  const { id } = req.params;
   new Abmkey({ id, payload }).save((err) => {
     if (err) return res.sendStatus(500);
     return res.json({ result: 'ok' });
@@ -21,7 +22,6 @@ router.get('/:id', (req, res) => {
     if (err) return res.sendStatus(500);
     if (!result) return res.sendStatus(404);
     res.setHeader('content-type', 'application/octet-stream');
-    res.status(200);
     return res.send(result.getBinPayload());
   });
 });
