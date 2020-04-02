@@ -24,5 +24,8 @@ $ echo '{"type": "service_account",  .....}' > gcp_key.json
 ```
   - Run
 ```bash
-$ ./run.sh
+$ yarn start
 ```
+
+## License
+MIT License
