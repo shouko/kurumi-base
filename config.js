@@ -6,4 +6,7 @@ module.exports = {
   storageBucket: {
     dcimg: process.env.GCS_BUCKET_DCIMG,
   },
+  hostname: {
+    dcimg: process.env.HOSTNAME_DCIMG,
+  },
 };
