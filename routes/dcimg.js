@@ -1,5 +1,4 @@
 const rp = require('request-promise');
-const etag = require('etag');
 const config = require('../config');
 
 const ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0';
@@ -69,8 +68,6 @@ module.exports = (req, res) => {
           return resolve({
             headers: {
               'content-type': response.headers['content-type'],
-              'cache-control': cacheControlString,
-              etag: etag(response.data),
             },
             body: response.data,
           });
@@ -78,9 +75,7 @@ module.exports = (req, res) => {
       });
     });
   }).then(({ headers, body }) => {
-    res.header('Content-Length', headers['content-length']);
     res.header('Content-Type', headers['content-type']);
-    res.header('ETag', headers.etag);
     res.header('Cache-Control', cacheControlString);
     res.status(200);
     res.send(body);
