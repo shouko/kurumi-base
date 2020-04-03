@@ -7,7 +7,7 @@ const originalImagePattern = /<img src="([^"]+)" class="original_image" \/>/;
 const cacheControlString = 'public, max-age=1800, s-maxage=2592000';
 
 function buildRequestUrl(id) {
-  return `http://dcimg.awalker.jp/view/${id}`;
+  return `http://${config.hostname.dcimg}/view/${id}`;
 }
 
 function transformKeepHeaders(body, response) {
@@ -42,7 +42,7 @@ module.exports = (req, res) => {
           logger.error(response.headers, response.data);
           throw new Error();
         }
-        return `http://dcimg.awalker.jp${matches[1]}`;
+        return `http://${config.hostname.dcimg}${matches[1]}`;
       }).then((imgurl) => rp({
         uri: imgurl,
         headers: {
