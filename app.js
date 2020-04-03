@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/dcimg/:id', require('./routes/dcimg'));
-app.use('/abmkey', require('./routes/abmkey'));
+app.use('/abmkey', require('./middleware/auth').devOnly, require('./routes/abmkey'));
 
 app.listen(config.port, () => logger.info(`Listening on port ${config.port}!`));
 
