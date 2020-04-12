@@ -46,7 +46,9 @@ app.get('/', (req, res) => res.send('Hello World!'));
 app.get('/dcimg/:id', require('./routes/dcimg'));
 app.use('/abmkey', require('./middleware/auth').devOnly, require('./routes/abmkey'));
 
-app.listen(config.port, () => logger.info(`Listening on port ${config.port}!`));
+const listener = app.listen(config.port, () => {
+  logger.info(`Listening on port ${listener.address().port}!`);
+});
 
 process.on('SIGINT', () => {
   mongoose.connection.close(() => {
