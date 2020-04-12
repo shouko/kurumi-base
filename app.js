@@ -1,11 +1,8 @@
 const express = require('express');
-const bunyan = require('bunyan');
-const http = require('http');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config');
-
-const logger = bunyan.createLogger({ name: 'kurumi-base' });
+const logger = require('./services/logger');
 
 let dbConnected = false;
 const dbConnect = () => {
@@ -33,10 +30,6 @@ mongoose.connection.on('reconnected', () => {
 
 const app = express();
 app.disable('x-powered-by');
-app.locals.logger = logger;
-app.locals.httpAgent = new http.Agent();
-app.locals.httpAgent.maxSockets = 10;
-app.locals.storage = require('./utils/storage');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
