@@ -6,7 +6,8 @@
   "author": "shouko <imshouko@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "./run.sh"
+    "start": "./run.sh",
+    "test": "jest"
   },
   "engines": {
     "node": "12.x"
@@ -28,6 +29,7 @@
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1"
+    "eslint-plugin-import": "^2.20.1",
+    "jest": "^25.5.1"
   }
 }
