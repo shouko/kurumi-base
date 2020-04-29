@@ -1,17 +1,16 @@
 const express = require('express');
-const bunyan = require('bunyan');
-const http = require('http');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config');
-
-const logger = bunyan.createLogger({ name: 'kurumi-base' });
+const logger = require('./services/logger');
+const auth = require('./middleware/auth');
 
 let dbConnected = false;
 const dbConnect = () => {
   mongoose.connect(config.mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   });
 };
 dbConnect();
@@ -33,10 +32,6 @@ mongoose.connection.on('reconnected', () => {
 
 const app = express();
 app.disable('x-powered-by');
-app.locals.logger = logger;
-app.locals.httpAgent = new http.Agent();
-app.locals.httpAgent.maxSockets = 10;
-app.locals.storage = require('./utils/storage');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -44,9 +39,14 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/dcimg/:id', require('./routes/dcimg'));
-app.use('/abmkey', require('./middleware/auth').devOnly, require('./routes/abmkey'));
+app.use('/abmkey', auth.devOnly, require('./routes/abmkey'));
+app.use('/tasks', auth.devOnly, auth.devMockLogin, require('./routes/tasks'));
 
-app.listen(config.port, () => logger.info(`Listening on port ${config.port}!`));
+app.use('/hooks', require('./routes/hooks'));
+
+const listener = app.listen(config.port, () => {
+  logger.info(`Listening on port ${listener.address().port}!`);
+});
 
 process.on('SIGINT', () => {
   mongoose.connection.close(() => {

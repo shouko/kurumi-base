@@ -1,6 +1,8 @@
 const rp = require('request-promise');
-const etag = require('etag');
 const config = require('../config');
+const logger = require('../services/logger');
+const httpsAgent = require('../services/httpsAgent');
+const storage = require('../services/storage');
 
 const ua = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0';
 const originalImagePattern = /<img src="([^"]+)" class="original_image" \/>/;
@@ -19,7 +21,6 @@ function transformKeepHeaders(body, response) {
 
 module.exports = (req, res) => {
   const { id } = req.params;
-  const { logger, httpAgent, storage } = req.app.locals;
 
   new Promise((resolve, reject) => {
     storage.readFile(config.storageBucket.dcimg, id).then(({ headers, body }) => {
@@ -34,7 +35,7 @@ module.exports = (req, res) => {
           'User-Agent': ua,
         },
         jar,
-        pool: httpAgent,
+        pool: httpsAgent,
         transform: transformKeepHeaders,
       }).then((response) => {
         const matches = originalImagePattern.exec(response.data);
@@ -49,7 +50,7 @@ module.exports = (req, res) => {
           'User-Agent': ua,
         },
         jar,
-        pool: httpAgent,
+        pool: httpsAgent,
         encoding: null,
         transform: transformKeepHeaders,
       })).then((response) => {
@@ -69,8 +70,6 @@ module.exports = (req, res) => {
           return resolve({
             headers: {
               'content-type': response.headers['content-type'],
-              'cache-control': cacheControlString,
-              etag: etag(response.data),
             },
             body: response.data,
           });
@@ -78,9 +77,7 @@ module.exports = (req, res) => {
       });
     });
   }).then(({ headers, body }) => {
-    res.header('Content-Length', headers['content-length']);
     res.header('Content-Type', headers['content-type']);
-    res.header('ETag', headers.etag);
     res.header('Cache-Control', cacheControlString);
     res.status(200);
     res.send(body);
