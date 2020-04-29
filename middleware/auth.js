@@ -13,4 +13,11 @@ module.exports = {
     }
     return next();
   },
+  sendgridIncoming: (req, res, next) => {
+    if (
+      !req.headers.authorization
+      || req.headers.authorization !== config.mail.incomingKey
+    ) return res.sendStatus(403);
+    return next();
+  },
 };
