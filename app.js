@@ -12,6 +12,7 @@ const dbConnect = () => {
     useUnifiedTopology: true,
     useFindAndModify: false,
   });
+  mongoose.set('useCreateIndex', true);
 };
 dbConnect();
 
