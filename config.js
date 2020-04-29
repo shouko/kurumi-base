@@ -10,4 +10,8 @@ module.exports = {
   hostname: {
     dcimg: process.env.HOSTNAME_DCIMG,
   },
+  mail: {
+    incomingKey: process.env.SG_INCOMING_KEY,
+    outgoingKey: process.env.SG_OUTGOING_KEY,
+  },
 };

@@ -42,6 +42,8 @@ app.get('/dcimg/:id', require('./routes/dcimg'));
 app.use('/abmkey', auth.devOnly, require('./routes/abmkey'));
 app.use('/tasks', auth.devOnly, auth.devMockLogin, require('./routes/tasks'));
 
+app.use('/hooks', require('./routes/hooks'));
+
 const listener = app.listen(config.port, () => {
   logger.info(`Listening on port ${listener.address().port}!`);
 });
