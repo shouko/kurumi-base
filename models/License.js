@@ -5,7 +5,7 @@ const parseDate = (v, end) => {
   if (typeof v === 'string') {
     const rgx = /^(\d{4})-(\d{2})-(\d{2})$/g;
     if (rgx.exec(v)) {
-      const t = end ? '23:50:59' : '00:00:00';
+      const t = end ? '23:59:59' : '00:00:00';
       const d = new Date(`${v} ${t}+09:00`);
       if (!Number.isNaN(d.getTime())) return d;
     }
