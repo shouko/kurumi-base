@@ -45,8 +45,8 @@ const incoming = new Queue(({
     }
     return License.find({
       key: topic.key,
-      from: { $gte: new Date() },
-      to: { $lte: new Date() },
+      from: { $lte: new Date() },
+      to: { $gte: new Date() },
     }).populate('user').exec((error, licenses) => {
       if (error) return cb(err);
       if (!licenses || licenses.length === 0) {
