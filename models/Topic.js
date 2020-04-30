@@ -6,7 +6,7 @@ const schema = new Schema({
     required: true,
     unique: true,
   },
-  name: String,
+  name: { type: String, default: '' },
   data: Object,
 }, {
   timestamps: true,
