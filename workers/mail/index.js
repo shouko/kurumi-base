@@ -46,6 +46,7 @@ const incoming = new Queue(({
       key: topic.key,
       from: { $lte: new Date() },
       to: { $gte: new Date() },
+      active: true,
     }).populate('user').exec((error, licenses) => {
       if (error) return cb(err);
       if (!licenses || licenses.length === 0) {
@@ -53,7 +54,8 @@ const incoming = new Queue(({
         return cb(null);
       }
       return licenses.forEach(({ user }) => {
-        deliver.push({
+        if (!user.email.verified) return false;
+        return deliver.push({
           ...preDeliver,
           user,
         });
