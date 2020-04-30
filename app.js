@@ -43,6 +43,12 @@ app.get('/dcimg/:id', require('./routes/dcimg'));
 app.use('/abmkey', auth.devOnly, require('./routes/abmkey'));
 app.use('/tasks', auth.devOnly, auth.devMockLogin, require('./routes/tasks'));
 
+// TODO: implement proper auth
+app.use('/users', auth.sendgridIncoming, require('./routes/users'));
+app.use('/licenses', auth.sendgridIncoming, require('./routes/licenses'));
+app.use('/topics', auth.sendgridIncoming, require('./routes/topics'));
+app.use('/mails', auth.sendgridIncoming, require('./routes/mails'));
+
 app.use('/hooks', require('./routes/hooks'));
 
 const listener = app.listen(config.port, () => {
