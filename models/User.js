@@ -26,7 +26,7 @@ schema.pre('save', function (next) {
   return bcrypt.genSalt(10, (err, salt) => {
     if (err) return next(err);
     return bcrypt.hash(user.password, salt, (error, hash) => {
-      if (err) return next(err);
+      if (error) return next(err);
       user.password = hash;
       return next();
     });
@@ -40,4 +40,4 @@ schema.methods.comparePassword = function (candidate, cb) {
   });
 };
 
-module.exports = mongoose.model('Mail', schema);
+module.exports = mongoose.model('User', schema);
