@@ -1,23 +1,20 @@
 const Queue = require('better-queue');
 const sendgrid = require('@sendgrid/mail');
-const config = require('../config');
-const logger = require('../services/logger');
-const { parseFrom } = require('../utils/email');
-const Topic = require('../models/Topic');
-const License = require('../models/License');
+const config = require('../../config');
+const logger = require('../../services/logger');
+const { parseFrom } = require('../../utils/email');
+const Topic = require('../../models/Topic');
+const License = require('../../models/License');
+const { buildPreDeliverPayload, buildMessagePayload } = require('./transform');
 
 sendgrid.setApiKey(config.mail.outgoingKey);
 
 const deliver = new Queue(({
   user, from, subject, text, html,
 }, cb) => {
-  const msg = {
-    from,
-    to: user.email.address,
-    subject,
-  };
-  if (text) msg.text = text.join(user.nickname);
-  if (html) msg.html = html.join(user.nickname);
+  const msg = buildMessagePayload({
+    user, from, subject, text, html,
+  });
 
   sendgrid
     .send(msg)
@@ -26,7 +23,7 @@ const deliver = new Queue(({
 });
 
 const incoming = new Queue(({
-  from, subject, text, html,
+  from, to, subject, text, html,
 }, cb) => {
   const {
     name,
@@ -34,15 +31,17 @@ const incoming = new Queue(({
     username,
   } = parseFrom(from);
 
-  const textTransformed = text; // TODO: Image replacement
-  const htmlTransformed = html;
-
   Topic.findOne({ key: `mail:${address}` }, (err, topic) => {
     if (err) return cb(err);
     if (!topic) {
       logger.info(`No suitable topic for ${address}`);
       return cb();
     }
+
+    const preDeliver = buildPreDeliverPayload({
+      topic, from: { name, username }, to, subject, text, html,
+    });
+
     return License.find({
       key: topic.key,
       from: { $lte: new Date() },
@@ -55,11 +54,8 @@ const incoming = new Queue(({
       }
       return licenses.forEach(({ user }) => {
         deliver.push({
-          from: `${name} <${username}@${config.mail.domain}>`.trim(),
+          ...preDeliver,
           user,
-          subject,
-          text: text ? textTransformed.split('NICKNAME_PLACEHOLDER') : null, // TODO: Nickname placeholder
-          html: html ? htmlTransformed.split('NICKNAME_PLACEHOLDER') : null,
         });
       });
     });
