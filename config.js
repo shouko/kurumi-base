@@ -13,5 +13,6 @@ module.exports = {
   mail: {
     incomingKey: process.env.SG_INCOMING_KEY,
     outgoingKey: process.env.SG_OUTGOING_KEY,
+    domain: process.env.SG_DOMAIN,
   },
 };

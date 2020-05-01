@@ -67,7 +67,7 @@ router.patch('/:id', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  Task.findOne({ id: req.params.id }, (err, result) => {
+  Task.findOne({ _id: req.params.id }, (err, result) => {
     if (err) return res.sendStatus(500);
     if (!result) return res.sendStatus(404);
     return res.json(result);
