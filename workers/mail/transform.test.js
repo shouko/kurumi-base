@@ -23,7 +23,7 @@ describe('transformBody', () => {
     data = {
       receive: {
         nickname: {
-          'foo@example_com': 'Nanasi',
+          'foo@example_co_jp': 'Nanasi',
           'bar@example_jp': 'タロウ',
         },
       },
@@ -38,11 +38,11 @@ describe('transformBody', () => {
     it('rule defined, matching', () => {
       expect(transformBody({
         ...args.to,
-        address: 'foo@example.com',
+        address: 'foo@example.co.jp',
       }, htmlInput, data, true)).toEqual(htmlSplit);
       expect(transformBody({
         ...args.to,
-        address: 'foo@example.com',
+        address: 'foo@example.co.jp',
       }, textInput, data, true)).toEqual(textSplit);
     });
 
@@ -83,7 +83,7 @@ describe('buildMessagePayload', () => {
         },
         nickname: 'ハナコ',
       },
-      from: 'foo@example.com',
+      from: 'foo@example.co.jp',
       subject: 'Awesome Title',
     };
     body = {
