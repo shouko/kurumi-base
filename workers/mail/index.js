@@ -50,12 +50,14 @@ const incoming = new Queue(({
       return cb();
     }
 
-    const preDeliver = buildPreDeliverPayload({
-      topic, from: { name, username }, to, subject, text, html,
-    });
+    let preDeliver;
 
-    if (!preDeliver) {
-      logger.error('Failed to build pre-deliver payload');
+    try {
+      preDeliver = buildPreDeliverPayload({
+        topic, from: { name, username }, to, subject, text, html,
+      });
+    } catch (e) {
+      logger.error(e.name, e.message);
       return cb('preDeliver failed');
     }
 

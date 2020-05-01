@@ -1,27 +1,27 @@
 const { parseFrom } = require('../../utils/email');
 
+const getNickname = (data, address) => {
+  if (data && data.receive && data.receive.nickname) {
+    const nicknameKey = address.replace(/\./g, '_');
+    const nickname = data.receive.nickname[nicknameKey];
+    if (nickname) return nickname;
+  }
+  throw new Error(`Nickname not configured for ${address}`);
+};
+
 const transformBody = (to, input, data, isHtml) => {
-  let output = input;
   if (isHtml) {
     // TODO: Image replacement
   }
-  if (data && data.receive && data.receive.nickname) {
-    const nickname = data.receive.nickname[to.address.replace(/\./g, '_')];
-    if (nickname) {
-      output = output.split(nickname);
-    }
-  }
-  if (typeof output === 'string') {
-    output = [output];
-  }
-  return output;
+  const nickname = getNickname(data, to.address);
+  return input.split(nickname);
 };
 
 const buildPreDeliverPayload = ({
-  topic: { data }, from: { name, username }, to, subject, text, html,
+  topic: { key, data }, from: { name, username }, to, subject, text, html,
 }) => {
   if (!data || !data.deliver || !data.deliver.domain) {
-    return false;
+    throw new Error(`Insufficient topic data for ${key}`);
   }
 
   const deliverName = data.deliver.name ? data.deliver.name : name || '';

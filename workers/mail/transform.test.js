@@ -35,7 +35,7 @@ describe('transformBody', () => {
   });
 
   describe('Can peform nickname replacement', () => {
-    it('rule defined, matching', () => {
+    it('rule defined, body matching', () => {
       expect(transformBody({
         ...args.to,
         address: 'foo@example.co.jp',
@@ -46,7 +46,7 @@ describe('transformBody', () => {
       }, textInput, data, true)).toEqual(textSplit);
     });
 
-    it('rule defined, not matching', () => {
+    it('rule defined, body not matching', () => {
       expect(transformBody({
         ...args.to,
         address: 'bar@example.jp',
@@ -58,14 +58,18 @@ describe('transformBody', () => {
     });
 
     it('rule not defined', () => {
-      expect(transformBody({
-        ...args.to,
-        address: 'ggg@example.com',
-      }, htmlInput, data, true)).toEqual([htmlInput]);
-      expect(transformBody({
-        ...args.to,
-        address: 'ggg@example.com',
-      }, textInput, data, true)).toEqual([textInput]);
+      expect(() => {
+        transformBody({
+          ...args.to,
+          address: 'ggg@example.com',
+        }, htmlInput, data, true);
+      }).toThrow();
+      expect(() => {
+        transformBody({
+          ...args.to,
+          address: 'ggg@example.com',
+        }, textInput, data, true);
+      }).toThrow();
     });
   });
 });
@@ -208,6 +212,11 @@ describe('buildPreDeliverPayload', () => {
           name: 'アスカ',
           domain: 'mail.example.us',
         },
+        receive: {
+          nickname: {
+            'ayanami-rei@mail_example_com': 'レイ',
+          },
+        },
       },
     };
     subject = '無題';
@@ -221,18 +230,24 @@ describe('buildPreDeliverPayload', () => {
   });
 
   it('fail if no proper deliver data', () => {
-    expect(buildPreDeliverPayload({
-      topic: {},
-      from,
-    })).toBeFalsy();
-    expect(buildPreDeliverPayload({
-      topic: { data: {} },
-      from,
-    })).toBeFalsy();
-    expect(buildPreDeliverPayload({
-      topic: { data: { deliver: {} } },
-      from,
-    })).toBeFalsy();
+    expect(() => {
+      buildPreDeliverPayload({
+        topic: {},
+        from,
+      });
+    }).toThrow();
+    expect(() => {
+      buildPreDeliverPayload({
+        topic: { data: {} },
+        from,
+      });
+    }).toThrow();
+    expect(() => {
+      buildPreDeliverPayload({
+        topic: { data: { deliver: {} } },
+        from,
+      });
+    }).toThrow();
   });
 
   it('keeps subject intact', () => {
