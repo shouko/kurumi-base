@@ -6,7 +6,7 @@ const transformBody = (to, input, data, isHtml) => {
     // TODO: Image replacement
   }
   if (data && data.receive && data.receive.nickname) {
-    const nickname = data.receive.nickname[to.address];
+    const nickname = data.receive.nickname[to.address.replace(/\./, '_')];
     if (nickname) {
       output = output.split(nickname);
     }

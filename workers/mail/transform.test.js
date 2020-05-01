@@ -23,8 +23,8 @@ describe('transformBody', () => {
     data = {
       receive: {
         nickname: {
-          'foo@example.com': 'Nanasi',
-          'bar@example.jp': 'タロウ',
+          'foo@example_com': 'Nanasi',
+          'bar@example_jp': 'タロウ',
         },
       },
     };
