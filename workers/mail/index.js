@@ -19,7 +19,10 @@ const deliver = new Queue(({
   sendgrid
     .send(msg)
     .then(() => cb(null))
-    .catch((e) => cb(e));
+    .catch((e) => {
+      logger.error(e);
+      cb(e);
+    });
 });
 
 const incoming = new Queue(({
