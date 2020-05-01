@@ -16,6 +16,9 @@ const deliver = new Queue(({
     user, from, subject, text, html,
   });
 
+  logger.info(`Sending to ${user.email.address}`);
+  logger.info(msg);
+
   sendgrid
     .send(msg)
     .then(() => cb(null))
@@ -34,8 +37,14 @@ const incoming = new Queue(({
     username,
   } = parseFrom(from);
 
+  logger.info(`Processing mail from: ${address}, subject: ${subject}`);
+
   Topic.findOne({ key: `mail:${address}` }, (err, topic) => {
-    if (err) return cb(err);
+    if (err) {
+      logger.error(`Failed to find topic for ${address}`);
+      logger.error(err);
+      return cb(err);
+    }
     if (!topic) {
       logger.info(`No suitable topic for ${address}`);
       return cb();
@@ -45,19 +54,32 @@ const incoming = new Queue(({
       topic, from: { name, username }, to, subject, text, html,
     });
 
+    if (!preDeliver) {
+      logger.error('Failed to build pre-deliver payload');
+      return cb('preDeliver failed');
+    }
+
+    logger.info(preDeliver);
+
     return License.find({
       key: topic.key,
       from: { $lte: new Date() },
       to: { $gte: new Date() },
       active: true,
     }).populate('user').exec((error, licenses) => {
-      if (error) return cb(err);
+      if (error) {
+        logger.error(`Failed to find licenses for ${topic.key}`);
+        return cb(err);
+      }
       if (!licenses || licenses.length === 0) {
         logger.info(`No active license for ${topic.key}`);
         return cb(null);
       }
       return licenses.forEach(({ user }) => {
-        if (!user.email.verified) return false;
+        if (!user.email.verified) {
+          logger.info(`Skipping unverified email ${user.login}`);
+          return false;
+        }
         return deliver.push({
           ...preDeliver,
           user,
