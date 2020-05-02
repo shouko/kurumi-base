@@ -77,7 +77,7 @@ const incoming = new Queue(({
         logger.info(`No active license for ${topic.key}`);
         return cb(null);
       }
-      return licenses.forEach(({ user }) => {
+      licenses.forEach(({ user }) => {
         if (!user.email.verified) {
           logger.info(`Skipping unverified email ${user.login}`);
           return false;
@@ -87,6 +87,7 @@ const incoming = new Queue(({
           user,
         });
       });
+      return cb();
     });
   });
 });
