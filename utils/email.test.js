@@ -10,6 +10,16 @@ describe('parseFrom', () => {
     });
   });
 
+
+  it('Can parse local part with dot', () => {
+    expect(parseFrom('Foo Bar <a.p.ple@example.com>')).toEqual({
+      name: 'Foo Bar',
+      address: 'a.p.ple@example.com',
+      username: 'a.p.ple',
+      domain: 'example.com',
+    });
+  });
+
   describe('Can parse address without name', () => {
     it('with brackets', () => {
       expect(parseFrom('<apple@example.com>')).toEqual({
