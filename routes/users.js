@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../models/User');
 
 router.get('/', (req, res) => {
-  User.find().limit(req.query.limit || 20).exec((err, docs) => {
+  User.find().limit(Number(req.query.limit) || 20).exec((err, docs) => {
     if (err) return res.sendStatus(500);
     return res.json(docs);
   });

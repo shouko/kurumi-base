@@ -16,7 +16,7 @@ const schema = new Schema({
 */
 
 router.get('/', (req, res) => {
-  Topic.find().limit(req.query.limit || 20).exec((err, docs) => {
+  Topic.find().limit(Number(req.query.limit) || 20).exec((err, docs) => {
     if (err) return res.sendStatus(500);
     return res.json(docs);
   });

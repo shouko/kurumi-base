@@ -2,7 +2,7 @@ const router = require('express').Router();
 const License = require('../models/License');
 
 router.get('/', (req, res) => {
-  License.find().limit(req.query.limit || 20).exec((err, docs) => {
+  License.find().limit(Number(req.query.limit) || 20).exec((err, docs) => {
     if (err) return res.sendStatus(500);
     return res.json(docs);
   });

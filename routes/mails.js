@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Mail = require('../models/Mail');
 
 router.get('/', (req, res) => {
-  Mail.find().limit(req.query.limit || 20).exec((err, docs) => {
+  Mail.find().limit(Number(req.query.limit) || 20).exec((err, docs) => {
     if (err) return res.sendStatus(500);
     return res.json(docs);
   });

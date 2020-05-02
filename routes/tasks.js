@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Task = require('../models/Task');
 
 router.get('/', (req, res) => {
-  Task.find().limit(req.query.limit || 20).exec((err, docs) => {
+  Task.find().limit(Number(req.query.limit) || 20).exec((err, docs) => {
     if (err) return res.sendStatus(500);
     return res.json(docs);
   });
