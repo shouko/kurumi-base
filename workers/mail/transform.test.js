@@ -258,6 +258,17 @@ describe('buildPreDeliverPayload', () => {
     })).toHaveProperty('subject', subject);
   });
 
+  it('skips when filter keyword detected', () => {
+    expect(() => {
+      buildPreDeliverPayload({
+        topic,
+        from,
+        to,
+        html: ['<img src="http://example.jp', 'forcast', 'hb', 'asuka.jpg"></img>'].join('/'),
+      });
+    }).toThrow();
+  });
+
   describe('Can prepare payload', () => {
     it('with peferred deliver name', () => {
       expect(buildPreDeliverPayload({

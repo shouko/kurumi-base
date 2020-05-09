@@ -18,10 +18,18 @@ const transformBody = (to, input, data, isHtml) => {
 };
 
 const buildPreDeliverPayload = ({
-  topic: { key, data }, from: { name, username }, to, subject, text, html,
+  topic: { key, data },
+  from: { name, username }, to, subject,
+  text, html, noFilter,
 }) => {
   if (!data || !data.deliver || !data.deliver.domain) {
     throw new Error(`Insufficient topic data for ${key}`);
+  }
+  if (
+    !noFilter && html
+    && html.indexOf(Buffer.from('2f666f72636173742f68622f', 'hex').toString()) !== -1
+  ) {
+    throw new Error('Skipping message with filtering text');
   }
 
   const deliverName = data.deliver.name ? data.deliver.name : name || '';
