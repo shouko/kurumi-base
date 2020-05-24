@@ -15,4 +15,9 @@ module.exports = {
     outgoingKey: process.env.SG_OUTGOING_KEY,
     domain: process.env.SG_DOMAIN,
   },
+  mailgun: {
+    signingKey: process.env.MG_SIGNING_KEY,
+    sendingKey: process.env.MG_SENDING_KEY,
+    domain: process.env.MG_DOMAIN,
+  },
 };
