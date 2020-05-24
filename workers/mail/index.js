@@ -71,8 +71,8 @@ const incoming = new Queue(({
         return cb(null);
       }
       licenses.forEach(({ user }) => {
-        if (!user.email.verified) {
-          logger.info(`Skipping unverified email ${user.login}`);
+        if (!user || !user.email || !user.email.verified) {
+          logger.info(`Skipping unverified user ${user}`);
           return false;
         }
         return deliver.push({
