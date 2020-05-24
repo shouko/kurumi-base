@@ -2,7 +2,7 @@ const sendgrid = require('@sendgrid/mail');
 const Mailgun = require('mailgun-js');
 const config = require('../config');
 
-const mailgun = Mailgun({ apiKey: config.mailgun.sendingKey, domain: config.maildun.domain });
+const mailgun = Mailgun({ apiKey: config.mailgun.sendingKey, domain: config.mailgun.domain });
 sendgrid.setApiKey(config.mail.outgoingKey);
 
 const send = (payload, provider) => new Promise((resolve, reject) => {
