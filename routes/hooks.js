@@ -35,7 +35,7 @@ router.post('/mailgun', multer.any(), (req, res) => {
         .filter(([k]) => !k.startsWith('stripped-'))
         .map(([k, v]) => {
           if (k === 'body-html') return ['html', v];
-          if (k === 'body-plain') return ['html', v];
+          if (k === 'body-plain') return ['text', v];
           return [k.toLowerCase(), v];
         }),
     );
