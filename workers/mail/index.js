@@ -1,13 +1,10 @@
 const Queue = require('better-queue');
-const sendgrid = require('@sendgrid/mail');
-const config = require('../../config');
 const logger = require('../../services/logger');
 const { parseFrom } = require('../../utils/email');
 const Topic = require('../../models/Topic');
 const License = require('../../models/License');
 const { buildPreDeliverPayload, buildMessagePayload } = require('./transform');
-
-sendgrid.setApiKey(config.mail.outgoingKey);
+const { send } = require('../../services/mail');
 
 const deliver = new Queue(({
   user, from, subject, text, html,
@@ -19,13 +16,9 @@ const deliver = new Queue(({
   logger.info(`Sending to ${user.email.address}`);
   logger.info(msg);
 
-  sendgrid
-    .send(msg)
-    .then(() => cb(null))
-    .catch((e) => {
-      logger.error(e);
-      cb(e);
-    });
+  send(msg)
+    .then((res) => cb(null, res))
+    .catch((e) => cb(e));
 });
 
 const incoming = new Queue(({
