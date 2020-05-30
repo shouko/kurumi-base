@@ -88,7 +88,11 @@ describe('buildMessagePayload', () => {
         nickname: 'ハナコ',
       },
       from: 'foo@example.co.jp',
-      subject: ['Awesome Title'],
+      subject: {
+        split: ['Hello ', '!'],
+        nick: 'Hello ハナコ!',
+        dummy: 'Hello 〇〇!',
+      },
     };
     body = {
       htmlSplit: ['<HTML><body>Hello ', ' World<br>', ' fuga</body></HTML>'],
@@ -106,12 +110,12 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user, nickname: null },
           from: args.from,
-          subject: ['Awesome Title'],
+          subject: args.subject.split,
           text: body.textSplit,
         })).toEqual({
           from: args.from,
           to: 'oshi@example.jp',
-          subject: 'Awesome Title',
+          subject: args.subject.dummy,
           text: body.textDummy,
         });
       });
@@ -120,12 +124,12 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user },
           from: args.from,
-          subject: ['Awesome Title'],
+          subject: args.subject.split,
           text: body.textSplit,
         })).toEqual({
           from: args.from,
           to: 'oshi@example.jp',
-          subject: 'Awesome Title',
+          subject: args.subject.nick,
           text: body.textNick,
         });
       });
@@ -136,12 +140,12 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user, nickname: null },
           from: args.from,
-          subject: ['Awesome Title'],
+          subject: args.subject.split,
           html: body.htmlSplit,
         })).toEqual({
           from: args.from,
           to: 'oshi@example.jp',
-          subject: 'Awesome Title',
+          subject: args.subject.dummy,
           html: body.htmlDummy,
         });
       });
@@ -150,12 +154,12 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user },
           from: args.from,
-          subject: ['Awesome Title'],
+          subject: args.subject.split,
           html: body.htmlSplit,
         })).toEqual({
           from: args.from,
           to: 'oshi@example.jp',
-          subject: 'Awesome Title',
+          subject: args.subject.nick,
           html: body.htmlNick,
         });
       });
@@ -166,13 +170,13 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user, nickname: null },
           from: args.from,
-          subject: ['Awesome Title'],
+          subject: args.subject.split,
           text: body.textSplit,
           html: body.htmlSplit,
         })).toEqual({
           from: args.from,
           to: 'oshi@example.jp',
-          subject: 'Awesome Title',
+          subject: args.subject.dummy,
           text: body.textDummy,
           html: body.htmlDummy,
         });
@@ -182,13 +186,13 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user },
           from: args.from,
-          subject: ['Awesome Title'],
+          subject: args.subject.split,
           text: body.textSplit,
           html: body.htmlSplit,
         })).toEqual({
           from: args.from,
           to: 'oshi@example.jp',
-          subject: 'Awesome Title',
+          subject: args.subject.nick,
           text: body.textNick,
           html: body.htmlNick,
         });
