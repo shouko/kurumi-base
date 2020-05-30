@@ -88,7 +88,7 @@ describe('buildMessagePayload', () => {
         nickname: 'ハナコ',
       },
       from: 'foo@example.co.jp',
-      subject: 'Awesome Title',
+      subject: ['Awesome Title'],
     };
     body = {
       htmlSplit: ['<HTML><body>Hello ', ' World<br>', ' fuga</body></HTML>'],
@@ -106,7 +106,7 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user, nickname: null },
           from: args.from,
-          subject: 'Awesome Title',
+          subject: ['Awesome Title'],
           text: body.textSplit,
         })).toEqual({
           from: args.from,
@@ -120,7 +120,7 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user },
           from: args.from,
-          subject: 'Awesome Title',
+          subject: ['Awesome Title'],
           text: body.textSplit,
         })).toEqual({
           from: args.from,
@@ -136,7 +136,7 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user, nickname: null },
           from: args.from,
-          subject: 'Awesome Title',
+          subject: ['Awesome Title'],
           html: body.htmlSplit,
         })).toEqual({
           from: args.from,
@@ -150,7 +150,7 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user },
           from: args.from,
-          subject: 'Awesome Title',
+          subject: ['Awesome Title'],
           html: body.htmlSplit,
         })).toEqual({
           from: args.from,
@@ -166,7 +166,7 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user, nickname: null },
           from: args.from,
-          subject: 'Awesome Title',
+          subject: ['Awesome Title'],
           text: body.textSplit,
           html: body.htmlSplit,
         })).toEqual({
@@ -182,7 +182,7 @@ describe('buildMessagePayload', () => {
         expect(buildMessagePayload({
           user: { ...args.user },
           from: args.from,
-          subject: 'Awesome Title',
+          subject: ['Awesome Title'],
           text: body.textSplit,
           html: body.htmlSplit,
         })).toEqual({
@@ -254,8 +254,9 @@ describe('buildPreDeliverPayload', () => {
     expect(buildPreDeliverPayload({
       topic,
       subject: String(subject),
+      to,
       from,
-    })).toHaveProperty('subject', subject);
+    })).toHaveProperty('subject', [subject]);
   });
 
   it('skips when filter keyword detected', () => {

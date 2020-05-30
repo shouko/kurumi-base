@@ -37,10 +37,10 @@ const buildPreDeliverPayload = ({
 
   const res = {
     from: `${deliverName} <${deliverAddress}>`.trim(),
-    subject,
   };
 
   const parsedTo = parseFrom(to);
+  if (subject) res.subject = transformBody(parsedTo, subject, data, false);
   if (text) res.text = transformBody(parsedTo, text, data, false);
   if (html) res.html = transformBody(parsedTo, html, data, true);
 
@@ -53,10 +53,10 @@ const buildMessagePayload = ({
   const msg = {
     from,
     to: user.email.address,
-    subject,
   };
   if (text) msg.text = text.join(user.nickname || '〇〇');
   if (html) msg.html = html.join(user.nickname || '〇〇');
+  if (subject) msg.subject = subject.join(user.nickname || '〇〇');
   return msg;
 };
 
