@@ -34,8 +34,9 @@ mongoose.connection.on('reconnected', () => {
 const app = express();
 app.disable('x-powered-by');
 
-app.use(bodyParser.urlencoded({ limit: '10240kb', extended: false }));
-app.use(bodyParser.json());
+const bodyParserOptions = { limit: '10240kb' };
+app.use(bodyParser.urlencoded({ ...bodyParserOptions, extended: false }));
+app.use(bodyParser.json(bodyParserOptions));
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
